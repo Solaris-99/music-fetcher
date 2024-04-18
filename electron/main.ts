@@ -1,5 +1,6 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, ipcMain } from 'electron'
 import path from 'node:path'
+import YtHandler from './YtHandler'
 
 // The built directory structure
 //
@@ -25,7 +26,6 @@ function createWindow() {
       preload: path.join(__dirname, 'preload.js'),
     },
   })
-
   // Test active push message to Renderer-process.
   win.webContents.on('did-finish-load', () => {
     win?.webContents.send('main-process-message', (new Date).toLocaleString())
@@ -58,3 +58,17 @@ app.on('activate', () => {
 })
 
 app.whenReady().then(createWindow)
+
+const handler = YtHandler.getInstance()
+
+ipcMain.on('yt-search',async (e,args)=>{
+ 
+  const resp = await handler.search(args)
+  win?.webContents.send('yt-search-response',resp)
+  //send data
+})
+
+ipcMain.on('yt-download-request',async (e,url)=>{
+  console.log('downloading')
+  await handler.download(url);
+})
