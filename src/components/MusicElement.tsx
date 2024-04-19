@@ -14,7 +14,7 @@ export default function MusicElement(props: YouTubeVideo) {
         <>
                 <Card className='m-2 mx-auto w-4/5' >
                 <CardActionArea onClick={()=>{
-                    window.ipcRenderer.send('yt-download-request',props.url)
+                    window.ipcRenderer.send('yt-download-request',[props.url, props.title,props.channel?.name])
                     console.log(props.url)
                 }}>
                     <Paper className='flex h-28'>
@@ -22,7 +22,7 @@ export default function MusicElement(props: YouTubeVideo) {
                         <Box className='flex justify-between p-2 w-full'>
                             <Box className='w-4/5'>
                                 <Typography variant='h5'>{props.title}</Typography>
-                                <Typography variant='body2'>{props.channel?.artist}</Typography>
+                                <Typography variant='body2'>{props.channel?.name}</Typography>
                                 <Typography variant='body2'>{props.url}</Typography>
                             </Box>
                             <DownloadIcon className='block m-auto'></DownloadIcon>
