@@ -21,10 +21,11 @@ function App() {
           </Box>
           
           <Box className=' justify-center h-full w-full'>
+            
             <Paper className='h-full overflow-auto pt-2'>
-              <Box>
+                <Paper className='sticky -top-2 z-50 py-2'>
                   <Search></Search>
-              </Box>
+                </Paper>
               <MusicElementContainer></MusicElementContainer>
             </Paper>
           </Box>

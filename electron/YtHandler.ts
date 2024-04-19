@@ -1,4 +1,4 @@
-import { search, validate, stream, YouTubeVideo} from "play-dl";
+import { search, YouTubeVideo} from "play-dl";
 import ytdlp from 'ytdlp-nodejs';
 
 export default class YtHandler{
@@ -14,15 +14,18 @@ export default class YtHandler{
 
     public async search(txt: string){
         const res : YouTubeVideo[] = await search(txt);
+
         return res;
     }
 
-    public download(url:string){
+    public download(file_data:string[]){
         //recibir nombre
-        const download = ytdlp.download(url,{filter:'audioonly',output:{fileName:'test',outDir:YtHandler.OUTPUT_DIR}})
-        download.on('finished',()=>{console.log('download finished')})
-        download.on('progress',(p)=>{console.log('downloading ',p)})
-        download.on('error',(e)=>{console.log('download error:',e)})
+        const file_name = file_data[2] +' - '+file_data[1]+".mp3"
+        console.log(file_name)
+        const download = ytdlp.download(file_data[0],{filter:'audioonly',output:{fileName:file_name,outDir:YtHandler.OUTPUT_DIR}})
+        return download;
+        
+        
     }
 
 

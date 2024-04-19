@@ -71,8 +71,19 @@ ipcMain.on('yt-search',async (e,args)=>{
   //send data
 })
 
-ipcMain.on('yt-download-request',async (e,url)=>{
-  console.log('downloading')
-  await handler.download(url);
+ipcMain.on('yt-download-request',async (e,file_data)=>{
+  win?.webContents.send('yt-status', {state:'warning.main',id:file_data[3]})
+  const download = await handler.download(file_data);
+  download.on('finished',()=>{console.log('download finished');
+  win?.webContents.send('folder-update', fs.readdirSync('./music/'))
+  win?.webContents.send('yt-status', {state:'success.main',id:file_data[3]})
+
+})
+  download.on('progress',(p)=>{console.log(p)})
+  download.on('error',(e)=>{
+    console.log('download error:',e)
+    win?.webContents.send('yt-status', {state:'error.main',id:file_data[3]})
+  })
+  
 })
 

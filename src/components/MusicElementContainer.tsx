@@ -7,8 +7,6 @@ import { YouTubeVideo } from 'play-dl';
 
 export default function MusicElementContainer(){
     const [childs, setChilds] = useState([] as YouTubeVideo[])
- 
-    
     useEffect(()=>{
         window.ipcRenderer.on('yt-search-response',(e,resp: YouTubeVideo[])=>{
             setChilds(resp)
@@ -19,7 +17,7 @@ export default function MusicElementContainer(){
         <>
         <Stack>
           {childs.map((item:YouTubeVideo)=>(
-              <MusicElement {...item}></MusicElement>
+              <MusicElement key={item.id} {...item}></MusicElement>
             )
           )}
         </Stack>

@@ -1,6 +1,7 @@
 import { List, ListItemText, ListItemButton, ListItemIcon } from "@mui/material";
 import AudioFileIcon from '@mui/icons-material/AudioFile';
 import { useState, useEffect } from "react";
+import { YouTubeVideo } from "play-dl";
 
 
 
@@ -16,10 +17,10 @@ export default function FileViewer(){
     
     return(
         <List className="overflow-auto">
-            {files.map((item, index)=>(
-            <ListItemButton key={index}>
+            {files.map((item)=>(
+            <ListItemButton key={item}>
                 <ListItemIcon><AudioFileIcon></AudioFileIcon></ListItemIcon>
-                <ListItemText primary={item}></ListItemText>
+                <ListItemText primary={item} className="overflow-hidden h-7 text-ellipsis text-sm text-move"></ListItemText>
             </ListItemButton>
             ))}
         </List>
