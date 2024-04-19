@@ -1,7 +1,7 @@
 import { app, BrowserWindow, ipcMain } from 'electron'
 import path from 'node:path'
 import YtHandler from './YtHandler'
-
+import fs from 'node:fs';
 // The built directory structure
 //
 // ├─┬─┬ dist
@@ -22,13 +22,17 @@ const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL']
 function createWindow() {
   win = new BrowserWindow({
     icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
+    width:1000,
+    height:800,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
+      
     },
   })
   // Test active push message to Renderer-process.
   win.webContents.on('did-finish-load', () => {
     win?.webContents.send('main-process-message', (new Date).toLocaleString())
+    win?.webContents.send('folder-update', fs.readdirSync('./music/'))
   })
 
   if (VITE_DEV_SERVER_URL) {
@@ -61,8 +65,7 @@ app.whenReady().then(createWindow)
 
 const handler = YtHandler.getInstance()
 
-ipcMain.on('yt-search',async (e,args)=>{
- 
+ipcMain.on('yt-search',async (e,args)=>{ 
   const resp = await handler.search(args)
   win?.webContents.send('yt-search-response',resp)
   //send data
@@ -72,3 +75,4 @@ ipcMain.on('yt-download-request',async (e,url)=>{
   console.log('downloading')
   await handler.download(url);
 })
+

@@ -12,7 +12,7 @@ export default function MusicElement(props: YouTubeVideo) {
 
     return (
         <>
-                <Card className='m-2 m-element w-4/5' >
+                <Card className='m-2 mx-auto w-4/5' >
                 <CardActionArea onClick={()=>{
                     window.ipcRenderer.send('yt-download-request',props.url)
                     console.log(props.url)
