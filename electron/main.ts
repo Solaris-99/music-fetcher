@@ -2,6 +2,7 @@ import { app, BrowserWindow, ipcMain } from 'electron'
 import path from 'node:path'
 import YtHandler from './YtHandler'
 import fs from 'node:fs';
+import { search } from 'play-dl';
 // The built directory structure
 //
 // ├─┬─┬ dist
@@ -19,6 +20,11 @@ let win: BrowserWindow | null
 // 🚧 Use ['ENV_NAME'] avoid vite:define plugin - Vite@2.x
 const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL']
 
+const handler = YtHandler.getInstance()
+handler.loadMapping();
+console.log(handler)
+
+
 function createWindow() {
   win = new BrowserWindow({
     icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
@@ -32,7 +38,7 @@ function createWindow() {
   // Test active push message to Renderer-process.
   win.webContents.on('did-finish-load', () => {
     win?.webContents.send('main-process-message', (new Date).toLocaleString())
-    win?.webContents.send('folder-update', fs.readdirSync('./music/'))
+    win?.webContents.send('folder-update', fs.readdirSync('./music/').filter((item)=>item.endsWith('.mp3')) )    
   })
 
   if (VITE_DEV_SERVER_URL) {
@@ -63,22 +69,32 @@ app.on('activate', () => {
 
 app.whenReady().then(createWindow)
 
-const handler = YtHandler.getInstance()
+
 
 ipcMain.on('yt-search',async (e,args)=>{ 
   const resp = await handler.search(args)
+  const downloaded = []
+
+  for(let video of resp){
+    if(handler.mapping.urls.includes(video.url)){
+      downloaded.push(video.url)
+    }
+  }
   win?.webContents.send('yt-search-response',resp)
-  //send data
+  win?.webContents.send('yt-search-states',downloaded)  
 })
 
-ipcMain.on('yt-download-request',async (e,file_data)=>{
+ipcMain.on('yt-download-request',async (e,file_data)=> {
+  
   win?.webContents.send('yt-status', {state:'warning.main',id:file_data[3]})
   const download = await handler.download(file_data);
-  download.on('finished',()=>{console.log('download finished');
-  win?.webContents.send('folder-update', fs.readdirSync('./music/'))
+  download.on('finished',()=>{
+  console.log('download finished');
+  win?.webContents.send('folder-update', fs.readdirSync('./music/').filter(item=>item.endsWith('.mp3')))
   win?.webContents.send('yt-status', {state:'success.main',id:file_data[3]})
-
-})
+  //file_data: url, title, channel, id
+  handler.appendToMapping(file_data[0],file_data[1]+".mp3")
+  })
   download.on('progress',(p)=>{console.log(p)})
   download.on('error',(e)=>{
     console.log('download error:',e)

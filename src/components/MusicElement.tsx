@@ -6,33 +6,48 @@ import CardActionArea from '@mui/material/CardActionArea';
 import Card from '@mui/material/Card';
 import { YouTubeVideo } from 'play-dl';
 import { useState, useEffect } from 'react';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
 
 
 export default function MusicElement(props: YouTubeVideo) {
     const [state, setState] = useState({state:'info.main', id: ''})
- 
+    
+    const handleClick = function(){
+        if(state.state == 'info.main'){
+            window.ipcRenderer.send('yt-download-request',[props.url, props.title,props.channel?.name,props.id])
+            setState({state:state.state, id: props.id})
+            console.log(props.url)
+        }
+        else if (state.state == 'success.main'){
+            console.log('play music!')
+        }
+    }
 
     useEffect(()=>{
         window.ipcRenderer.on('yt-status',(e, update)=>{
-
             if(update.id == props.id){
                 setState({state:update.state, id:props.id})
             }
+        })
+
+        window.ipcRenderer.on('yt-search-states',(e,downloaded)=>{
+            if(downloaded.includes(props.url) && state.state != 'success.main'){
+                setState({state:'success.main', id:props.id})
+            }
+            else{
+                setState({state:'info.main',id:props.id})
+            }
 
         })
-    },[state,useState])
+
+
+    },[props.id, props.url, state])
 
     return (
         <>
                 <Card className='m-2 mx-auto w-4/5' >
-                <CardActionArea onClick={()=>{
-                    window.ipcRenderer.send('yt-download-request',[props.url, props.title,props.channel?.name,props.id])
-                    
-                    setState({state:state.state, id: props.id})
-
-                    console.log(props.url)
-                }}>
+                <CardActionArea onClick={handleClick}>
                     <Paper sx={{borderColor: state.state}} variant='outlined' className='flex h-28 music-paper'>
                         <img className='inline yt-img rounded-md' src={props.thumbnails[0].url} />
                         <Box className='flex justify-between p-2 w-full'>
@@ -41,7 +56,7 @@ export default function MusicElement(props: YouTubeVideo) {
                                 <Typography variant='body2'>{props.channel?.name}</Typography>
                                 <Typography variant='body2'>{props.url}</Typography>
                             </Box>
-                            <DownloadIcon className='block m-auto'></DownloadIcon>
+                            {state.state == 'success.main'?<PlayArrowIcon className='block m-auto'></PlayArrowIcon>:<DownloadIcon className='block m-auto'></DownloadIcon>}
                         </Box>
                     </Paper>
                 </CardActionArea>

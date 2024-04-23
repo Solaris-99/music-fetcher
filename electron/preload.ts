@@ -18,7 +18,14 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
     const [channel, ...omit] = args
     return ipcRenderer.invoke(channel, ...omit)
   },
-
+  listenerCount(...args: Parameters<typeof ipcRenderer.listenerCount>){
+    const [channel, ...omit] = args
+    return ipcRenderer.listenerCount(channel,...omit)
+  },
+  removeAllListeners(...args: Parameters<typeof ipcRenderer.removeAllListeners>){
+    const [channel, ...omit] = args
+    return ipcRenderer.removeAllListeners(channel,...omit)
+  },
   // You can expose other APTs you need here.
   // ...
 })
