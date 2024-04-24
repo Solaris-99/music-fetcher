@@ -2,7 +2,7 @@ import { app, BrowserWindow, ipcMain } from 'electron'
 import path from 'node:path'
 import YtHandler from './YtHandler'
 import fs from 'node:fs';
-import { search } from 'play-dl';
+import {setTimeout} from 'timers/promises'
 // The built directory structure
 //
 // ├─┬─┬ dist
@@ -80,8 +80,10 @@ ipcMain.on('yt-search',async (e,args)=>{
       downloaded.push(video.url)
     }
   }
-  win?.webContents.send('yt-search-response',resp)
-  win?.webContents.send('yt-search-states',downloaded)  
+  win?.webContents.send('yt-search-response',resp) // goes to music container
+  await setTimeout(300)
+  win?.webContents.send('yt-search-states',downloaded)  //music elements  
+
 })
 
 ipcMain.on('yt-download-request',async (e,file_data)=> {

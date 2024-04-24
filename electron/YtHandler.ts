@@ -18,7 +18,7 @@ export default class YtHandler{
 
     public async search(txt: string){
         const res : YouTubeVideo[] = await search(txt);
-        return res.slice(0,10);
+        return res;
     }
 
     public download(file_data:string[]){

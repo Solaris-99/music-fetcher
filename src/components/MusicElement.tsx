@@ -11,7 +11,7 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
 
 export default function MusicElement(props: YouTubeVideo) {
-    const [state, setState] = useState({state:'info.main', id: ''})
+    const [state, setState] = useState({state:'', id: props.id})
     
     const handleClick = function(){
         if(state.state == 'info.main'){
@@ -25,24 +25,25 @@ export default function MusicElement(props: YouTubeVideo) {
     }
 
     useEffect(()=>{
+        // console.log('title',props.title,'state',state.state)
+
         window.ipcRenderer.on('yt-status',(e, update)=>{
             if(update.id == props.id){
                 setState({state:update.state, id:props.id})
             }
         })
-
+        
         window.ipcRenderer.on('yt-search-states',(e,downloaded)=>{
-            if(downloaded.includes(props.url) && state.state != 'success.main'){
+            if(downloaded.includes(props.url)){
                 setState({state:'success.main', id:props.id})
             }
             else{
                 setState({state:'info.main',id:props.id})
             }
-
         })
 
 
-    },[props.id, props.url, state])
+    },[props.id, props.title, props.url, state])
 
     return (
         <>

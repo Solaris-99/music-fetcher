@@ -9,7 +9,7 @@ export default function FileViewer(){
     const [files, setFiles] = useState([] as string[])
     useEffect(()=>{
         window.ipcRenderer.on('folder-update',(e,files)=>{
-            console.log(files)
+            //console.log(files)
             setFiles(files)
         })
 
