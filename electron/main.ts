@@ -19,9 +19,9 @@ process.env.VITE_PUBLIC = app.isPackaged ? process.env.DIST : path.join(process.
 let win: BrowserWindow | null
 // 🚧 Use ['ENV_NAME'] avoid vite:define plugin - Vite@2.x
 const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL']
-
 const handler = YtHandler.getInstance()
 handler.loadMapping();
+
 console.log(handler)
 
 
@@ -30,6 +30,7 @@ function createWindow() {
     icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
     width:1000,
     height:800,
+    titleBarStyle: 'hidden',
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       
@@ -81,11 +82,10 @@ ipcMain.on('yt-search',async (e,args)=>{
     }
   }
   win?.webContents.send('yt-search-response',resp) // goes to music container
-  await setTimeout(300)
+  await setTimeout(300) // wait for the items to exist to update them
   win?.webContents.send('yt-search-states',downloaded)  //music elements  
 
 })
-
 ipcMain.on('yt-download-request',async (e,file_data)=> {
   
   win?.webContents.send('yt-status', {state:'warning.main',id:file_data[3]})
@@ -102,6 +102,8 @@ ipcMain.on('yt-download-request',async (e,file_data)=> {
     console.log('download error:',e)
     win?.webContents.send('yt-status', {state:'error.main',id:file_data[3]})
   })
-  
 })
 
+ipcMain.on('quit',()=>{
+  app.quit();
+})

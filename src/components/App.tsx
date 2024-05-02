@@ -3,12 +3,14 @@ import MusicElementContainer from './MusicElementContainer'
 import { Box, Paper, Typography } from '@mui/material'
 import '../css/App.css'
 import FileViewer from './FileViewer'
+import Header from './Header'
 
 function App() {
 
   return (
     <>
-      <Box className='h-full w-full'>
+      <Header></Header>
+      <Box className='h-full w-full p-4'>
         <Box className='flex h-95'>
           
           <Box className='w-3/12 mr-2'>
@@ -30,17 +32,7 @@ function App() {
             </Paper>
           </Box>
         </Box>
-
-        <Box>
-          <Paper className='mt-2'>
-            {/* placeholder */}
-            play button
-          </Paper>
-
-        </Box>
       </Box>
-      {/* <Box>
-            </Box> */}
     </>
   )
 }

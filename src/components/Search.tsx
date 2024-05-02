@@ -26,7 +26,7 @@ export default function Search(){
 
     return(
         <>
-            <TextField className="my-1 m-x-auto w-3/4" id="search" label="Search field" type="search" onChange={handleSearch} />
+            <TextField className="my-1 m-x-auto w-3/4" id="search" label="Busca un video" type="search" onChange={handleSearch} />
         
         </>
     )

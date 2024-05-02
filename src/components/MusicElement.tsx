@@ -20,12 +20,11 @@ export default function MusicElement(props: YouTubeVideo) {
             console.log(props.url)
         }
         else if (state.state == 'success.main'){
-            console.log('play music!')
+            // console.log('play music!') TODO
         }
     }
 
     useEffect(()=>{
-        // console.log('title',props.title,'state',state.state)
 
         window.ipcRenderer.on('yt-status',(e, update)=>{
             if(update.id == props.id){
@@ -61,7 +60,6 @@ export default function MusicElement(props: YouTubeVideo) {
                         </Box>
                     </Paper>
                 </CardActionArea>
-
                 </Card>
         </>
     )
