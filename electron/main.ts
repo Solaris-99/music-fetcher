@@ -86,6 +86,7 @@ ipcMain.on('yt-search',async (e,args)=>{
   win?.webContents.send('yt-search-states',downloaded)  //music elements  
 
 })
+
 ipcMain.on('yt-download-request',async (e,file_data)=> {
   
   win?.webContents.send('yt-status', {state:'warning.main',id:file_data[3]})
@@ -97,7 +98,11 @@ ipcMain.on('yt-download-request',async (e,file_data)=> {
   //file_data: url, title, channel, id
   handler.appendToMapping(file_data[0],file_data[1]+".mp3")
   })
-  download.on('progress',(p)=>{console.log(p)})
+  download.on('progress',(p)=>{
+    console.log(p)
+    //win?.webContents.send('yt-download-progress',)
+
+  })
   download.on('error',(e)=>{
     console.log('download error:',e)
     win?.webContents.send('yt-status', {state:'error.main',id:file_data[3]})

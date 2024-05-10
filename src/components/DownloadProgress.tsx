@@ -1,13 +1,27 @@
 import { useState, useEffect } from 'react';
-import { Paper, Box } from '@mui/material';
+import { Box, ListItemText, List } from '@mui/material';
 
-export default function DownloadProgress(){
+function DownloadProgressItem({name: name, progress:progress}){
+    return (<ListItemText primary={`${name} ${progress}%`}/>)
+}
+
+
+export default function DownloadProgress(){ 
+    const [childs, setChilds] = useState([]);
+
+    useEffect(()=>{
+        window.ipcRenderer.removeAllListeners('yt-download-progress')
+        window.ipcRenderer.on("yt-download-progress",(e,resp)=>{
+            setChilds(resp)
+        })
+
+    })
 
     return (
-        <Box>
-            <Paper>
-                
-            </Paper>
+        <Box className='h-50'>
+            <List>
+                {childs.map((item, index)=>(<DownloadProgressItem key={index} name={item.name} name={item.progress}></DownloadProgressItem>))}
+            </List>
         </Box>
     )
 

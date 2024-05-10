@@ -4,6 +4,7 @@ import { Box, Paper, Typography } from '@mui/material'
 import '../css/App.css'
 import FileViewer from './FileViewer'
 import Header from './Header'
+import DownloadProgress from './DownloadProgress'
 
 function App() {
 
@@ -15,10 +16,14 @@ function App() {
           
           <Box className='w-3/12 mr-2'>
             <Paper className='h-full'>
+              <Box>
               <Paper square elevation={1}>
                 <Typography variant="h6" color="initial">Archivos</Typography>
               </Paper>
               <FileViewer></FileViewer>
+              </Box>
+              <hr></hr>
+              <DownloadProgress></DownloadProgress>
             </Paper>
           </Box>
           
