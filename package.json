@@ -1,5 +1,7 @@
 {
   "name": "music-fetcher",
+  "author": "Solaris-99",
+  "description": "download videos from youtube, in mp3 format",
   "private": true,
   "version": "0.0.0",
   "scripts": {
