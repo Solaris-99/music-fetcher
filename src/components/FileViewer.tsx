@@ -15,7 +15,7 @@ export default function FileViewer(){
     },[files,setFiles] )
     
     return(
-        <List className="overflow-auto h-50">
+        <List className="overflow-auto " sx={{height:"40.5rem"}}>
             {files.map((item)=>(
             <ListItemButton key={item}>
                 <ListItemIcon><AudioFileIcon></AudioFileIcon></ListItemIcon>

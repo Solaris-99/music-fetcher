@@ -88,8 +88,9 @@ ipcMain.on('yt-search',async (e,args)=>{
 })
 
 ipcMain.on('yt-download-request',async (e,file_data)=> {
-  
-  win?.webContents.send('yt-status', {state:'warning.main',id:file_data[3]})
+  win?.webContents.send('yt-download-progress',
+  { name: file_data[1], progress: "Descarga iniciada..."})
+  win?.webContents.send('yt-status', {state:'warning.main',id:file_data[3]}) // FROM: Music Element@35 
   const download = await handler.download(file_data);
   download.on('finished',()=>{
   console.log('download finished');
@@ -98,10 +99,26 @@ ipcMain.on('yt-download-request',async (e,file_data)=> {
   //file_data: url, title, channel, id
   handler.appendToMapping(file_data[0],file_data[1]+".mp3")
   })
+
   download.on('progress',(p)=>{
     console.log(p)
+    if(p.percentage < 100){
+      
+      win?.webContents.send('yt-download-progress',
+      { 
+        name: file_data[1],
+        progress: `${p.downloaded_str}/${p.total_str} ~${p.percentage_str} @${p.speed_str}`
+      }
+    )}
+    else{
+      win?.webContents.send('yt-download-progress',
+      { 
+        name: file_data[1],
+        progress: "Completado"
+      })
+    }
     //win?.webContents.send('yt-download-progress',)
-
+    
   })
   download.on('error',(e)=>{
     console.log('download error:',e)

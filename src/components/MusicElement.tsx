@@ -10,9 +10,10 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import DownloadingIcon from '@mui/icons-material/Downloading';
 
 
-function SetIcon({state}){
+function HandleIcon({state: state}){
     const cssClass ='block m-auto';
-    if (state == 'info.main'){
+    console.log("state",state);
+    if (state == 'success.main'){
         return (<PlayArrowIcon className={cssClass}></PlayArrowIcon>)
     }
     else if (state == 'warning.main'){
@@ -27,6 +28,7 @@ function SetIcon({state}){
 
 export default function MusicElement(props: YouTubeVideo) {
     const [state, setState] = useState({state:'', id: props.id})
+    //const [icon, setIcon] = useState(HandleIcon({state.state}))
     
     const handleClick = function(){
         if(state.state == 'info.main'){
@@ -56,7 +58,6 @@ export default function MusicElement(props: YouTubeVideo) {
             }
         })
 
-
     },[props.id, props.title, props.url, state])
 
     return (
@@ -71,7 +72,7 @@ export default function MusicElement(props: YouTubeVideo) {
                                 <Typography variant='body2'>{props.channel?.name}</Typography>
                                 <Typography variant='body2'>{props.url}</Typography>
                             </Box>
-                            {SetIcon({state:state})}
+                            <HandleIcon state={state.state}></HandleIcon>
                         </Box>
                     </Paper>
                 </CardActionArea>
