@@ -7,7 +7,22 @@ import Card from '@mui/material/Card';
 import { YouTubeVideo } from 'play-dl';
 import { useState, useEffect } from 'react';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import DownloadingIcon from '@mui/icons-material/Downloading';
 
+
+function SetIcon({state}){
+    const cssClass ='block m-auto';
+    if (state == 'info.main'){
+        return (<PlayArrowIcon className={cssClass}></PlayArrowIcon>)
+    }
+    else if (state == 'warning.main'){
+        return (<DownloadingIcon className={cssClass}></DownloadingIcon>)
+    }
+    else{
+        return (<DownloadIcon className={cssClass}></DownloadIcon>)
+    }
+
+}
 
 
 export default function MusicElement(props: YouTubeVideo) {
@@ -20,7 +35,7 @@ export default function MusicElement(props: YouTubeVideo) {
             console.log(props.url)
         }
         else if (state.state == 'success.main'){
-            // console.log('play music!') TODO
+            console.log('play music!'); //TODO
         }
     }
 
@@ -56,7 +71,7 @@ export default function MusicElement(props: YouTubeVideo) {
                                 <Typography variant='body2'>{props.channel?.name}</Typography>
                                 <Typography variant='body2'>{props.url}</Typography>
                             </Box>
-                            {state.state == 'success.main'?<PlayArrowIcon className='block m-auto'></PlayArrowIcon>:<DownloadIcon className='block m-auto'></DownloadIcon>}
+                            {SetIcon({state:state})}
                         </Box>
                     </Paper>
                 </CardActionArea>
