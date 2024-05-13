@@ -33,7 +33,7 @@ function createWindow() {
     titleBarStyle: 'hidden',
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
-      
+      nodeIntegration:true      
     },
   })
   // Test active push message to Renderer-process.
@@ -86,10 +86,11 @@ ipcMain.on('yt-search',async (e,args)=>{
   win?.webContents.send('yt-search-states',downloaded)  //music elements  
 
 })
-
+let pline = 0;
 ipcMain.on('yt-download-request',async (e,file_data)=> {
   win?.webContents.send('yt-download-progress',
-  { name: file_data[1], progress: "Descarga iniciada..."})
+  { name: file_data[1], progress: "Descarga iniciada...", line: pline })
+  pline++;
   win?.webContents.send('yt-status', {state:'warning.main',id:file_data[3]}) // FROM: Music Element@35 
   const download = await handler.download(file_data);
   download.on('finished',()=>{
@@ -106,13 +107,16 @@ ipcMain.on('yt-download-request',async (e,file_data)=> {
       
       win?.webContents.send('yt-download-progress',
       { 
+        line: pline,
         name: file_data[1],
         progress: `${p.downloaded_str}/${p.total_str} ~${p.percentage_str} @${p.speed_str}`
       }
     )}
     else{
+      pline++;
       win?.webContents.send('yt-download-progress',
       { 
+        line: pline,
         name: file_data[1],
         progress: "Completado"
       })
@@ -125,6 +129,17 @@ ipcMain.on('yt-download-request',async (e,file_data)=> {
     win?.webContents.send('yt-status', {state:'error.main',id:file_data[3]})
   })
 })
+
+ipcMain.on('video-play', (e, url)=>{
+  const videoCode = url.substring(url.indexOf('?v=')+3);  
+  win?.webContents.send('video-play-iframe','https://www.youtube.com/embed/' + videoCode);
+})
+
+
+ipcMain.on('folder-contents',()=>{
+  win?.webContents.send('folder-update', fs.readdirSync('./music/').filter(item=>item.endsWith('.mp3')))
+})
+
 
 ipcMain.on('quit',()=>{
   app.quit();
