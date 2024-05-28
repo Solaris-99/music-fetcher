@@ -7,9 +7,9 @@ This project was done with Electron, using: react + typeScript + vite.
 ✔️ Is for already implemented features.
 ❌ Is for planned, unnimplemented features.
 
-✔️ Download videos as mp3 files.
-✔️ Search videos through their titles.
-✔️ Visualize downloaded files.
-❌ Reproduce mp3 files directly in the app.
-❌ Select custom folder for music files.
-❌ Search by url.
+✔️ Download videos as mp3 files.  
+✔️ Search videos through their titles.  
+✔️ Visualize downloaded files.  
+✔️ Preview a video before downloading.  
+❌ Search by url.  
+❌ Select custom folder for music files.  
